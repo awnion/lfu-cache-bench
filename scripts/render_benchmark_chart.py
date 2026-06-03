@@ -38,7 +38,7 @@ def cargo_target_dir() -> Path:
     return Path(json.loads(metadata.stdout)["target_directory"])
 
 
-def read_mean_us(estimates_path: Path) -> tuple[float, float, float]:
+def read_mean_microseconds(estimates_path: Path) -> tuple[float, float, float]:
     estimates = json.loads(estimates_path.read_text())
     mean = estimates["mean"]
     interval = mean["confidence_interval"]
@@ -66,7 +66,7 @@ def load_results() -> tuple[list[int], dict[str, dict[int, tuple[float, float, f
 
         capacity = int(value)
         estimates_path = benchmark_json.with_name("estimates.json")
-        results[implementation][capacity] = read_mean_us(estimates_path)
+        results[implementation][capacity] = read_mean_microseconds(estimates_path)
 
     capacities = sorted({capacity for rows in results.values() for capacity in rows})
     missing = [
@@ -88,7 +88,7 @@ def write_csv(capacities: list[int], results: dict[str, dict[int, tuple[float, f
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     with CSV_OUTPUT.open("w", newline="") as file:
         writer = csv.writer(file)
-        writer.writerow(["capacity", "implementation", "lower_us", "mean_us", "upper_us"])
+        writer.writerow(["capacity", "implementation", "lower_µs", "mean_µs", "upper_µs"])
         for capacity in capacities:
             for implementation in SERIES:
                 low, mean, high = results[implementation][capacity]
@@ -98,7 +98,7 @@ def write_csv(capacities: list[int], results: dict[str, dict[int, tuple[float, f
 def time_tick(value: float, _position: int) -> str:
     if value >= 1_000:
         return f"{value / 1_000:g} ms"
-    return f"{value:g} us"
+    return f"{value:g} µs"
 
 
 def main() -> None:

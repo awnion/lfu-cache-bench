@@ -1,4 +1,4 @@
-capacity,implementation,lower_us,mean_us,upper_us
+capacity,implementation,lower_µs,mean_µs,upper_µs
 1,btree,23.694563,23.756398,23.815340
 1,vec,17.438446,17.528489,17.616072
 1,heap,11.316157,11.432464,11.529791
