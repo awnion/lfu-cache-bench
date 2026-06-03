@@ -1,6 +1,9 @@
-use criterion::{Criterion, criterion_group, criterion_main};
+use criterion::{BenchmarkId, Criterion, criterion_group, criterion_main};
+use lfu_cache_rs::{btree_lfu, heap_lfu, vec_lfu};
 use std::hint::black_box;
-use workato::{btree_lfu, heap_lfu, vec_lfu};
+
+const CAPACITIES: [usize; 12] = [1, 4, 10, 16, 30, 60, 100, 250, 1_000, 5_000, 10_000, 20_000];
+const OPERATIONS: u64 = 1_000;
 
 fn run_btree_workload(capacity: usize, operations: u64) {
     let mut cache = btree_lfu::LFU::new(capacity);
@@ -62,17 +65,27 @@ fn run_heap_workload(capacity: usize, operations: u64) {
 fn bench_lfu(c: &mut Criterion) {
     let mut group = c.benchmark_group("lfu");
 
-    group.bench_function("btree", |b| {
-        b.iter(|| run_btree_workload(black_box(1024 << 4), black_box(1_000)))
-    });
+    for capacity in CAPACITIES {
+        group.bench_with_input(
+            BenchmarkId::new("btree", capacity),
+            &capacity,
+            |b, &capacity| {
+                b.iter(|| run_btree_workload(black_box(capacity), black_box(OPERATIONS)))
+            },
+        );
 
-    group.bench_function("vec", |b| {
-        b.iter(|| run_vec_workload(black_box(1024 << 4), black_box(1_000)))
-    });
+        group.bench_with_input(
+            BenchmarkId::new("vec", capacity),
+            &capacity,
+            |b, &capacity| b.iter(|| run_vec_workload(black_box(capacity), black_box(OPERATIONS))),
+        );
 
-    group.bench_function("heap", |b| {
-        b.iter(|| run_heap_workload(black_box(1024 << 4), black_box(1_000)))
-    });
+        group.bench_with_input(
+            BenchmarkId::new("heap", capacity),
+            &capacity,
+            |b, &capacity| b.iter(|| run_heap_workload(black_box(capacity), black_box(OPERATIONS))),
+        );
+    }
 
     group.finish();
 }

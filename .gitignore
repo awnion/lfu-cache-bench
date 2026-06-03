@@ -1,1 +1,19 @@
+# Rust
 /target
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.python-version
+.venv/
+venv/
+env/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+
+# Local/editor files
+.DS_Store
+.idea/
+.vscode/

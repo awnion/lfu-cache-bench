@@ -1,5 +1,5 @@
 mod btree_lfu_tests {
-    use workato::btree_lfu::LFU;
+    use lfu_cache_rs::btree_lfu::LFU;
 
     #[test]
     #[should_panic(expected = "Should be bigger than 0")]
@@ -102,7 +102,7 @@ mod btree_lfu_tests {
 }
 
 mod vec_lfu_tests {
-    use workato::vec_lfu::LFU;
+    use lfu_cache_rs::vec_lfu::LFU;
 
     #[test]
     #[should_panic(expected = "Should be bigger than 0")]
@@ -205,7 +205,7 @@ mod vec_lfu_tests {
 }
 
 mod heap_lfu_tests {
-    use workato::heap_lfu::LFU;
+    use lfu_cache_rs::heap_lfu::LFU;
 
     #[test]
     #[should_panic(expected = "Should be bigger than 0")]
