@@ -3,6 +3,7 @@
 
 # C++
 /cpp/lfu_bench
+/bazel-*
 
 # Python
 __pycache__/

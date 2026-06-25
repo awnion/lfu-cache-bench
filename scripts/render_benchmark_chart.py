@@ -142,7 +142,7 @@ def main() -> None:
 
     fig, ax = plt.subplots(figsize=(14.5, 8.0))
     fig.subplots_adjust(left=0.08, right=0.98, bottom=0.16, top=0.72)
-    fig.suptitle("LFU Cache Benchmark", x=0.08, y=0.96, ha="left", fontsize=24, fontweight="bold")
+    fig.suptitle("Rust LFU Cache Benchmark (log scale)", x=0.08, y=0.96, ha="left", fontsize=24, fontweight="bold")
     fig.text(
         0.08,
         0.86,
