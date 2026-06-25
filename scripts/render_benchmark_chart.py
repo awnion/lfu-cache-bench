@@ -20,11 +20,31 @@ BENCHMARK_GROUP = "lfu"
 OUTPUT_DIR = Path("assets")
 SVG_OUTPUT = OUTPUT_DIR / "lfu-benchmark.svg"
 CSV_OUTPUT = OUTPUT_DIR / "lfu-benchmark.csv"
+CAPACITIES = [
+    1,
+    2,
+    4,
+    8,
+    16,
+    32,
+    64,
+    128,
+    256,
+    512,
+    1_024,
+    2_048,
+    4_096,
+    8_192,
+    16_384,
+    32_768,
+    65_536,
+]
 
 SERIES = {
     "btree": {"label": "BTree index", "color": "#2563eb"},
     "vec": {"label": "Sorted Vec", "color": "#dc2626"},
     "heap": {"label": "Indexed heap", "color": "#16a34a"},
+    "linked": {"label": "Linked list", "color": "#9333ea"},
 }
 
 
@@ -68,7 +88,7 @@ def load_results() -> tuple[list[int], dict[str, dict[int, tuple[float, float, f
         estimates_path = benchmark_json.with_name("estimates.json")
         results[implementation][capacity] = read_mean_microseconds(estimates_path)
 
-    capacities = sorted({capacity for rows in results.values() for capacity in rows})
+    capacities = CAPACITIES
     missing = [
         f"{implementation}/{capacity}"
         for implementation, rows in results.items()
@@ -121,13 +141,13 @@ def main() -> None:
         }
     )
 
-    fig, ax = plt.subplots(figsize=(13.2, 7.4))
-    fig.subplots_adjust(left=0.08, right=0.98, bottom=0.14, top=0.72)
+    fig, ax = plt.subplots(figsize=(14.5, 8.0))
+    fig.subplots_adjust(left=0.08, right=0.98, bottom=0.16, top=0.72)
     fig.suptitle("LFU Cache Benchmark", x=0.08, y=0.96, ha="left", fontsize=24, fontweight="bold")
     fig.text(
         0.08,
         0.86,
-        "Criterion mean estimates from 1,000 mixed operations per iteration.",
+        "Criterion mean estimates from 250 mixed operations per iteration.",
         color="#667085",
         fontsize=12,
     )
@@ -160,11 +180,13 @@ def main() -> None:
 
     ax.set_xscale("log")
     ax.set_yscale("log")
-    ax.set_xticks(capacities)
-    ax.set_xticklabels([f"{capacity:,}" for capacity in capacities])
+    shown_ticks = [1, 4, 16, 64, 256, 1_024, 4_096, 16_384, 65_536]
+    ax.set_xticks(shown_ticks)
+    ax.set_xticklabels([f"{capacity:,}" for capacity in shown_ticks])
     ax.yaxis.set_major_formatter(FuncFormatter(time_tick))
     ax.margins(x=0.04)
-    ax.set_ylim(8, 130_000)
+    max_high = max(value[2] for rows in results.values() for value in rows.values())
+    ax.set_ylim(2, max_high * 1.4)
     ax.grid(True, which="major")
     ax.grid(True, which="minor", alpha=0.25)
     ax.set_xlabel("Cache capacity")

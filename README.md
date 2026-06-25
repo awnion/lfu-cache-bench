@@ -5,6 +5,7 @@ This repository compares several least-frequently-used cache implementations:
 - `btree_lfu`: `HashMap` storage with a `BTreeSet` frequency index.
 - `vec_lfu`: `HashMap` index with a frequency-sorted `Vec`.
 - `heap_lfu`: `HashMap` storage with a custom indexed tuple min-heap.
+- `linked_lfu`: `HashMap` index with an indexed doubly linked list.
 
 ## Benchmark
 
@@ -16,20 +17,25 @@ cargo bench
 
 Mean time per Criterion iteration:
 
-| Capacity |     BTree |       Vec |      Heap |
-| -------: | --------: | --------: | --------: |
-|        1 |  23.76 µs |  17.53 µs |  11.43 µs |
-|        4 |  28.82 µs |  22.73 µs |  74.44 µs |
-|       10 |  32.49 µs |  33.26 µs |  71.02 µs |
-|       16 |  43.78 µs |  34.78 µs |  95.41 µs |
-|       30 |  43.47 µs |  48.15 µs |  88.26 µs |
-|       60 |  50.70 µs |  72.70 µs | 100.46 µs |
-|      100 |  63.42 µs | 121.51 µs | 106.96 µs |
-|      250 |  76.68 µs | 320.88 µs | 105.76 µs |
-|    1,000 | 190.63 µs |   3.19 ms | 126.21 µs |
-|    5,000 | 551.41 µs |  23.60 ms | 309.53 µs |
-|   10,000 | 999.52 µs |  48.96 ms | 485.24 µs |
-|   20,000 |   1.92 ms |  99.50 ms | 817.25 µs |
+| Capacity |     BTree |       Vec |      Heap |    Linked |
+| -------: | --------: | --------: | --------: | --------: |
+|        1 |   5.97 µs |   4.33 µs |   3.79 µs |   3.46 µs |
+|        2 |   6.28 µs |   4.48 µs |   3.91 µs |   3.49 µs |
+|        4 |   7.43 µs |   5.77 µs |  17.81 µs |   5.77 µs |
+|        8 |   8.07 µs |   7.78 µs |  17.64 µs |   5.75 µs |
+|       16 |  11.87 µs |   9.75 µs |  20.64 µs |   8.04 µs |
+|       32 |  12.13 µs |  14.42 µs |  22.11 µs |  12.95 µs |
+|       64 |  14.27 µs |  26.48 µs |  22.73 µs |  27.81 µs |
+|      128 |  18.70 µs |  64.10 µs |  22.10 µs |  63.95 µs |
+|      256 |  32.11 µs | 226.76 µs |  28.99 µs | 231.15 µs |
+|      512 |  50.09 µs | 560.88 µs |  43.63 µs | 621.48 µs |
+|    1,024 |  92.47 µs |   1.22 ms |  64.88 µs |   1.91 ms |
+|    2,048 | 172.15 µs |   2.49 ms |  98.92 µs |   6.48 ms |
+|    4,096 | 341.22 µs |   5.21 ms | 164.05 µs |  23.35 ms |
+|    8,192 | 683.61 µs |  10.60 ms | 287.12 µs |  92.47 ms |
+|   16,384 |   1.39 ms |  21.19 ms | 530.94 µs | 363.02 ms |
+|   32,768 |   2.89 ms |  43.93 ms |   1.03 ms |    1.42 s |
+|   65,536 |   5.94 ms |  94.23 ms |   2.11 ms |    4.69 s |
 
 Run the benchmark:
 
