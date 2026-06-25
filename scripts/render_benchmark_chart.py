@@ -37,7 +37,6 @@ CAPACITIES = [
     8_192,
     16_384,
     32_768,
-    65_536,
 ]
 
 SERIES = {
@@ -180,7 +179,7 @@ def main() -> None:
 
     ax.set_xscale("log")
     ax.set_yscale("log")
-    shown_ticks = [1, 4, 16, 64, 256, 1_024, 4_096, 16_384, 65_536]
+    shown_ticks = [1, 4, 16, 64, 256, 1_024, 4_096, 16_384, 32_768]
     ax.set_xticks(shown_ticks)
     ax.set_xticklabels([f"{capacity:,}" for capacity in shown_ticks])
     ax.yaxis.set_major_formatter(FuncFormatter(time_tick))

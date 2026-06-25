@@ -2,9 +2,8 @@ use criterion::{BenchmarkId, Criterion, criterion_group, criterion_main};
 use lfu_cache_rs::{btree_lfu, heap_lfu, linked_lfu, vec_lfu};
 use std::hint::black_box;
 
-const CAPACITIES: [usize; 17] = [
+const CAPACITIES: [usize; 16] = [
     1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1_024, 2_048, 4_096, 8_192, 16_384, 32_768,
-    65_536,
 ];
 const OPERATIONS: u64 = 250;
 
