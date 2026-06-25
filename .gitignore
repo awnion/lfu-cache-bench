@@ -1,6 +1,9 @@
 # Rust
 /target
 
+# C++
+/cpp/lfu_bench
+
 # Python
 __pycache__/
 *.py[cod]

@@ -1,11 +1,17 @@
-# LFU Cache Implementations in Rust
+# LFU Cache Implementations in Rust and C++
+
+## Benchmark Overview
+
+| C++ | Rust |
+| --- | ---- |
+| ![C++ LFU cache benchmark report](/assets/cpp-lfu-benchmark.svg) | ![Rust LFU cache benchmark report](/assets/lfu-benchmark.svg) |
 
 This repository compares several least-frequently-used cache implementations:
 
 - `btree_lfu`: `HashMap` storage with a `BTreeSet` frequency index.
 - `vec_lfu`: `HashMap` index with a frequency-sorted `Vec`.
 - `heap_lfu`: `HashMap` storage with a custom indexed tuple min-heap.
-- `linked_lfu`: `HashMap` index with an indexed doubly linked list.
+- `linked_lfu`: `HashMap` index with frequency-bucketed doubly linked lists.
 
 ## Benchmark
 
@@ -47,3 +53,34 @@ Regenerate the SVG and CSV report from the latest Criterion JSON output:
 ```bash
 ./scripts/render_benchmark_chart.py
 ```
+
+## C++ Benchmark
+
+```bash
+clang++ -std=c++20 -O3 -DNDEBUG cpp/lfu_bench.cpp -o cpp/lfu_bench
+./cpp/lfu_bench
+./scripts/render_cpp_benchmark_chart.py
+```
+
+![C++ LFU cache benchmark report](/assets/cpp-lfu-benchmark.svg)
+
+Mean time per benchmark iteration:
+
+| Capacity |     Tree |    Vector |      Heap |     Linked |
+| -------: | -------: | --------: | --------: | ---------: |
+|        1 |  4.60 µs |   1.56 µs |   1.04 µs |    5.38 µs |
+|        2 |  5.32 µs |   1.60 µs |   1.47 µs |    5.77 µs |
+|        4 |  8.90 µs |   9.62 µs |   6.26 µs |   10.04 µs |
+|        8 |  9.33 µs |  13.04 µs |   6.95 µs |    7.68 µs |
+|       16 | 12.28 µs |  21.18 µs |   8.05 µs |    7.77 µs |
+|       32 | 13.35 µs |  36.37 µs |   9.07 µs |    9.74 µs |
+|       64 | 18.02 µs |  60.02 µs |   9.86 µs |   14.30 µs |
+|      128 | 24.90 µs | 112.18 µs |  12.39 µs |   29.49 µs |
+|      256 | 44.35 µs | 273.90 µs |  15.31 µs |   79.74 µs |
+|      512 | 68.11 µs | 555.52 µs |  22.64 µs |  203.96 µs |
+|    1,024 | 99.86 µs |   1.09 ms |  39.74 µs |  641.43 µs |
+|    2,048 | 197.49 µs |  2.07 ms |  64.67 µs |    2.22 ms |
+|    4,096 | 352.79 µs |  4.24 ms | 117.95 µs |   15.57 ms |
+|    8,192 | 752.64 µs |  8.36 ms | 219.56 µs |   62.74 ms |
+|   16,384 |  1.48 ms | 16.67 ms | 437.14 µs |  216.60 ms |
+|   32,768 |  3.00 ms | 33.58 ms | 870.33 µs |  829.78 ms |
