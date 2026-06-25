@@ -2,9 +2,16 @@
 
 ## Benchmark Overview
 
-| C++ | Rust |
-| --- | ---- |
-| ![C++ LFU cache benchmark report](/assets/cpp-lfu-benchmark.svg) | ![Rust LFU cache benchmark report](/assets/lfu-benchmark.svg) |
+<div>
+  <div style="display: inline-block; width: 49%; vertical-align: top;">
+    <h3>C++</h3>
+    <img src="/assets/cpp-lfu-benchmark.svg" alt="C++ LFU cache benchmark report" width="100%">
+  </div>
+  <div style="display: inline-block; width: 49%; vertical-align: top;">
+    <h3>Rust</h3>
+    <img src="/assets/lfu-benchmark.svg" alt="Rust LFU cache benchmark report" width="100%">
+  </div>
+</div>
 
 This repository compares several least-frequently-used cache implementations:
 
@@ -57,8 +64,7 @@ Regenerate the SVG and CSV report from the latest Criterion JSON output:
 ## C++ Benchmark
 
 ```bash
-clang++ -std=c++20 -O3 -DNDEBUG cpp/lfu_bench.cpp -o cpp/lfu_bench
-./cpp/lfu_bench
+bazel run -c opt //cpp:lfu_bench
 ./scripts/render_cpp_benchmark_chart.py
 ```
 
